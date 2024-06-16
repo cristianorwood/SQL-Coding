@@ -168,10 +168,16 @@ The result format is in the following example.
 | 1 |
 
 
-### Solution
+### Solution 1
 
 ```sql
-SELECT department, MAX(salary) AS largest_salary
-FROM employees
-GROUP BY department;
+SELECT DISTINCT log1.num AS ConsecutiveNums
+FROM
+    Logs  log1, -- temporary tables
+    Logs  log2,
+    Logs  log3
+WHERE log1.id = log2.id -1 AND -- check that these are in consecutive order
+      log2.id = log3.id -1 AND
+      log1.num = log2.num AND -- check that the values are the same
+      log2.num = log3.num 
 ```
