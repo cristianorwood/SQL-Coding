@@ -181,3 +181,16 @@ WHERE log1.id = log2.id -1 AND -- check that these are in consecutive order
       log1.num = log2.num AND -- check that the values are the same
       log2.num = log3.num 
 ```
+ #### Using Lead Function
+``` sql 
+WITH cte as(
+SELECT id,num
+WHERE lead(num,1) OVER () num1,
+      lead(num,2) OVER () num2
+FROM logs
+)
+
+SELECT DISTINCT(num) ConsecutiveNums 
+FROM cte WHERE (num=num1) AND (num=num2)
+```
+
