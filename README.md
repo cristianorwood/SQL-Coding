@@ -181,7 +181,8 @@ WHERE log1.id = log2.id -1 AND -- check that these are in consecutive order
       log1.num = log2.num AND -- check that the values are the same
       log2.num = log3.num 
 ```
- #### Using Lead Function
+### Solution 2 
+#### Using Lead Function
 ``` sql 
 WITH cte as(
 SELECT id,num
