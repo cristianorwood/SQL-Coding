@@ -242,3 +242,38 @@ WHERE (product_id) NOT IN
     WHERE change_date <= "2019-08-16"
 )
 ```
+### Problem: Employees Whose Manager Left the Company
+
+Given a table called `Employees` with columns `employee_id`, `name`, `manager_id`, and `salary`, find the IDs of employees whose salary is less than $30000 and whose manager has left the company. When a manager leaves, their information is deleted from the `Employees` table, but their former reports still have their `manager_id` set.
+
+#### Example
+
+**Input:**
+
+| employee_id | name      | manager_id | salary |
+|-------------|-----------|------------|--------|
+| 3           | Mila      | 9          | 60301  |
+| 12          | Antonella | null       | 31000  |
+| 13          | Emery     | null       | 67084  |
+| 1           | Kalel     | 11         | 21241  |
+| 9           | Mikaela   | null       | 50937  |
+| 11          | Joziah    | 6          | 28485  |
+
+**Output:**
+
+| employee_id |
+|-------------|
+| 11          |
+
+### Solution
+
+```sql
+SELECT employee_id
+FROM employees
+WHERE salary < 30000
+  AND manager_id NOT IN (
+      SELECT employee_id
+      FROM employees
+  )
+ORDER BY employee_id;
+```
