@@ -1,6 +1,6 @@
 # SQL-Coding
 
-# Largest Salary by Department
+# 184. Largest Salary by Department
 
 Given a table called `employees`, with the following schema:
 
