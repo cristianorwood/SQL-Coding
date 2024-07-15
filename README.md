@@ -242,7 +242,7 @@ WHERE (product_id) NOT IN
     WHERE change_date <= "2019-08-16"
 )
 ```
-### Problem: Employees Whose Manager Left the Company
+# Problem: Employees Whose Manager Left the Company
 
 Given a table called `Employees` with columns `employee_id`, `name`, `manager_id`, and `salary`, find the IDs of employees whose salary is less than $30000 and whose manager has left the company. When a manager leaves, their information is deleted from the `Employees` table, but their former reports still have their `manager_id` set.
 
@@ -276,4 +276,33 @@ WHERE salary < 30000
       FROM employees
   )
 ORDER BY employee_id;
+```
+# 1667. Fixing User Names
+
+Given a table called `Users` with columns `user_id` and `name`, where `user_id` is the primary key, correct the formatting of names so that only the first character is uppercase and the rest are lowercase.
+
+## Example
+
+**Input:**
+
+Users table:
+
+| user_id | name  |
+|---------|-------|
+| 1       | aLice |
+| 2       | bOB   |
+
+**Output:**
+
+| user_id | name  |
+|---------|-------|
+| 1       | Alice |
+| 2       | Bob   |
+
+## Solution
+
+```sql
+UPDATE Users
+SET name = CONCAT(UPPER(SUBSTRING(name, 1, 1)), LOWER(SUBSTRING(name, 2)))
+ORDER BY user_id;
 ```
