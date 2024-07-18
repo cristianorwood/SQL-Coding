@@ -306,7 +306,7 @@ UPDATE Users
 SET name = CONCAT(UPPER(SUBSTRING(name, 1, 1)), LOWER(SUBSTRING(name, 2)))
 ORDER BY user_id;
 ```
-# 1204. Finding the Last Person to Fit in the Bus
+# 1204. Last Person to Fit in the Bus
 
 There is a queue of people waiting to board a bus. Each person has a `person_id`, `person_name`, `weight`, and `turn` indicating the order of boarding. The bus has a weight limit of 1000 kilograms. Write a SQL query to find the `person_name` of the last person that can fit on the bus without exceeding the weight limit.
 
