@@ -306,3 +306,54 @@ UPDATE Users
 SET name = CONCAT(UPPER(SUBSTRING(name, 1, 1)), LOWER(SUBSTRING(name, 2)))
 ORDER BY user_id;
 ```
+# 1204. Finding the Last Person to Fit in the Bus
+
+There is a queue of people waiting to board a bus. Each person has a `person_id`, `person_name`, `weight`, and `turn` indicating the order of boarding. The bus has a weight limit of 1000 kilograms. Write a SQL query to find the `person_name` of the last person that can fit on the bus without exceeding the weight limit.
+
+## Example
+
+**Input:**
+
+Queue table:
+
+| person_id | person_name | weight | turn |
+|-----------|-------------|--------|------|
+| 5         | Alice       | 250    | 1    |
+| 4         | Bob         | 175    | 5    |
+| 3         | Alex        | 350    | 2    |
+| 6         | John Cena   | 400    | 3    |
+| 1         | Winston     | 500    | 6    |
+| 2         | Marie       | 200    | 4    |
+
+**Output:**
+
+| person_name |
+|-------------|
+| John Cena   |
+
+**Explanation:**
+The table is ordered by `turn` for simplicity.
+
+| Turn | ID | Name      | Weight | Total Weight |
+|------|----|-----------|--------|--------------|
+| 1    | 5  | Alice     | 250    | 250          |
+| 2    | 3  | Alex      | 350    | 600          |
+| 3    | 6  | John Cena | 400    | 1000         | (last person to board)
+| 4    | 2  | Marie     | 200    | 1200         | (cannot board)
+| 5    | 4  | Bob       | 175    | ___          |
+| 6    | 1  | Winston   | 500    | ___          |
+
+## Solution
+
+```sql
+SELECT person_name
+FROM (
+    SELECT person_name, SUM(weight) OVER (ORDER BY turn) AS total_weight
+    FROM Queue
+) AS cumulative
+WHERE total_weight <= 1000
+ORDER BY turn DESC
+LIMIT 1;
+```
+
+
