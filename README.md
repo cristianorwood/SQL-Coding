@@ -468,20 +468,28 @@ The person with `id = 3` is a friend of people 1, 2, and 4, so they have three f
 ### Solution
 
 ```sql
-WITH cte AS
-(
-SELECT requester_id AS id, accepter_id
-FROM RequestAccepted
-UNION
-SELECT accepter_id AS id, requester_id
-FROM
-RequestAccepted)
-
-SELECT DISTINCT id, count(id) AS num
-FROM cte
-GROUP BY id
-ORDER BY num DESC
-LIMIT 1:
+# Write your MySQL query statement below
+   WITH cte as ( 
+    SELECT
+        id,
+        num, 
+        dense_rank() over(order by num DESC) as rnk
+    FROM (
+    SELECT id, count(id) num
+    FROM
+        (
+        SELECT requester_id AS id, accepter_id
+        FROM RequestAccepted
+        UNION
+        SELECT accepter_id AS id, requester_id
+        FROM RequestAccepted) id
+    GROUP BY id
+    ORDER BY num DESC
+    ) rnk_table
+   ) 
+   SELECT id, num
+   FROM cte
+   WHERE rnk = 1
 ```
 
 
