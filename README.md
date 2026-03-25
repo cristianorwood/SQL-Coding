@@ -468,7 +468,6 @@ The person with `id = 3` is a friend of people 1, 2, and 4, so they have three f
 ### Solution
 
 ```sql
-# Write your MySQL query statement below
    WITH cte as ( 
     SELECT
         id,
@@ -492,4 +491,119 @@ The person with `id = 3` is a friend of people 1, 2, and 4, so they have three f
    WHERE rnk = 1
 ```
 
+# 595. Big Countries
 
+### Table: `World`
+
+| Column Name | Type    |
+|-------------|---------|
+| name        | varchar |
+| continent   | varchar |
+| area        | int     |
+| population  | int     |
+| gdp         | bigint  |
+
+`name` is the primary key (column with unique values) for this table.
+Each row of this table gives information about the name of a country, the continent to which it belongs, its area, the population, and its GDP value.
+
+---
+
+A country is **big** if:
+- it has an area of at least three million (i.e., `3000000 km2`), or
+- it has a population of at least twenty-five million (i.e., `25000000`).
+
+Write a solution to find the name, population, and area of the big countries.
+
+Return the result table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`World` table:
+
+| name        | continent | area    | population | gdp          |
+|-------------|-----------|---------|------------|--------------|
+| Afghanistan | Asia      | 652230  | 25500100   | 20343000000  |
+| Albania     | Europe    | 28748   | 2831741    | 12960000000  |
+| Algeria     | Africa    | 2381741 | 37100000   | 188681000000 |
+| Andorra     | Europe    | 468     | 78115      | 3712000000   |
+| Angola      | Africa    | 1246700 | 20609294   | 100990000000 |
+
+**Output:**
+
+| name        | population | area    |
+|-------------|------------|---------|
+| Afghanistan | 25500100   | 652230  |
+| Algeria     | 37100000   | 2381741 |
+
+
+### Solution
+
+```sql
+SELECT 
+name, 
+population, 
+area
+FROM world
+WHERE area >= 3000000 OR population >= 25000000
+```
+
+# 1148. Article Views I
+
+### Table: `Views`
+
+| Column Name | Type |
+|-------------|------|
+| article_id  | int  |
+| author_id   | int  |
+| viewer_id   | int  |
+| view_date   | date |
+
+There is no primary key (column with unique values) for this table, the table may have duplicate rows.
+Each row of this table indicates that some viewer viewed an article (written by some author) on some date.
+Note that equal `author_id` and `viewer_id` indicate the same person.
+
+---
+
+Write a solution to find all the authors that viewed at least one of their own articles.
+
+Return the result table sorted by `id` in ascending order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Views` table:
+
+| article_id | author_id | viewer_id | view_date  |
+|------------|-----------|-----------|------------|
+| 1          | 3         | 5         | 2019-08-01 |
+| 1          | 3         | 6         | 2019-08-02 |
+| 2          | 7         | 7         | 2019-08-01 |
+| 2          | 7         | 6         | 2019-08-02 |
+| 4          | 7         | 1         | 2019-07-22 |
+| 3          | 4         | 4         | 2019-07-21 |
+| 3          | 4         | 4         | 2019-07-21 |
+
+**Output:**
+
+| id |
+|----|
+| 4  |
+| 7  |
+
+### Solution
+
+```sql
+SELECT author_id as id
+FROM views
+WHERE author_id = viewer_id
+GROUP BY author_id
+ORDER BY author_id ASC
+
+```
