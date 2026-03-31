@@ -242,7 +242,7 @@ WHERE (product_id) NOT IN
     WHERE change_date <= "2019-08-16"
 )
 ```
-# Problem: Employees Whose Manager Left the Company
+# 1978. Employees Whose Manager Left the Company
 
 Given a table called `Employees` with columns `employee_id`, `name`, `manager_id`, and `salary`, find the IDs of employees whose salary is less than $30000 and whose manager has left the company. When a manager leaves, their information is deleted from the `Employees` table, but their former reports still have their `manager_id` set.
 
@@ -606,4 +606,426 @@ WHERE author_id = viewer_id
 GROUP BY author_id
 ORDER BY author_id ASC
 
+```
+
+# 1683. Invalid Tweets
+## Table: `Tweets`
+
+| Column Name | Type    |
+|-------------|---------|
+| tweet_id    | int     |
+| content     | varchar |
+
+`tweet_id` is the primary key (column with unique values) for this table.
+`content` consists of alphanumeric characters, `!`, or ` ` and no other special characters.
+This table contains all the tweets in a social media app.
+
+---
+
+Write a solution to find the IDs of the invalid tweets. The tweet is invalid if the number of characters used in the content of the tweet is strictly greater than `15`.
+
+Return the result table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Tweets` table:
+
+| tweet_id | content                           |
+|----------|-----------------------------------|
+| 1        | Let us Code                       |
+| 2        | More than fifteen chars are here! |
+
+**Output:**
+
+| tweet_id |
+|----------|
+| 2        |
+
+**Explanation:**
+Tweet 1 has length = 11. It is a valid tweet.
+Tweet 2 has length = 33. It is an invalid tweet.
+
+### Solution
+
+```sql
+select tweet_id
+from tweets
+where CHAR_LENGTH(content) > 15 
+```
+
+# 1068. Product Sales Analysis I 
+## Table: `Sales`
+
+| Column Name | Type |
+|-------------|------|
+| sale_id     | int  |
+| product_id  | int  |
+| year        | int  |
+| quantity    | int  |
+| price       | int  |
+
+`(sale_id, year)` is the primary key (combination of columns with unique values) of this table.
+`product_id` is a foreign key (reference column) to the `Product` table.
+Each row of this table shows a sale on the product `product_id` in a certain year.
+Note that the price is per unit.
+
+---
+
+## Table: `Product`
+
+| Column Name  | Type    |
+|--------------|---------|
+| product_id   | int     |
+| product_name | varchar |
+
+`product_id` is the primary key (column with unique values) of this table.
+Each row of this table indicates the product name of each product.
+
+---
+
+Write a solution to report the `product_name`, `year`, and `price` for each `sale_id` in the `Sales` table.
+
+Return the resulting table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Sales` table:
+
+| sale_id | product_id | year | quantity | price |
+|---------|------------|------|----------|-------|
+| 1       | 100        | 2008 | 10       | 5000  |
+| 2       | 100        | 2009 | 12       | 5000  |
+| 7       | 200        | 2011 | 15       | 9000  |
+
+`Product` table:
+
+| product_id | product_name |
+|------------|--------------|
+| 100        | Nokia        |
+| 200        | Apple        |
+| 300        | Samsung      |
+
+**Output:**
+
+| product_name | year | price |
+|--------------|------|-------|
+| Nokia        | 2008 | 5000  |
+| Nokia        | 2009 | 5000  |
+| Apple        | 2011 | 9000  |
+
+**Explanation:**
+From sale_id = 1, we can conclude that Nokia was sold for 5000 in the year 2008.
+From sale_id = 2, we can conclude that Nokia was sold for 5000 in the year 2009.
+From sale_id = 7, we can conclude that Apple was sold for 9000 in the year 2011.
+
+### Solution
+```sql
+select product.product_name, sales.year, sales.price
+from sales
+join product
+on sales.product_id = product.product_id
+```
+
+
+# 197. Rising Temperature
+## Table: `Weather`
+
+| Column Name | Type |
+|-------------|------|
+| id          | int  |
+| recordDate  | date |
+| temperature | int  |
+
+`id` is the column with unique values for this table.
+There are no different rows with the same `recordDate`.
+This table contains information about the temperature on a certain day.
+
+---
+
+Write a solution to find all dates' `id` with higher temperatures compared to its previous dates (yesterday).
+
+Return the result table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Weather` table:
+
+| id | recordDate | temperature |
+|----|------------|-------------|
+| 1  | 2015-01-01 | 10          |
+| 2  | 2015-01-02 | 25          |
+| 3  | 2015-01-03 | 20          |
+| 4  | 2015-01-04 | 30          |
+
+**Output:**
+
+| id |
+|----|
+| 2  |
+| 4  |
+
+**Explanation:**
+In 2015-01-02, the temperature was higher than the previous day (10 -> 25).
+In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
+
+### Solution
+```sql
+SELECT w1.id
+FROM Weather w1, Weather w2
+WHERE DATEDIFF(w1.recordDate, w2.recordDate) = 1 AND w1.temperature > w2.temperature; #datediff to make sure that they are consecutive days (with a difference of 1 day)
+```
+
+# 577. Employee Bonus
+## Table: `Employee`
+
+| Column Name | Type    |
+|-------------|---------|
+| empId       | int     |
+| name        | varchar |
+| supervisor  | int     |
+| salary      | int     |
+
+`empId` is the column with unique values for this table.
+Each row of this table indicates the name and the ID of an employee in addition to their salary and the id of their manager.
+
+---
+
+## Table: `Bonus`
+
+| Column Name | Type |
+|-------------|------|
+| empId       | int  |
+| bonus       | int  |
+
+`empId` is the column of unique values for this table.
+`empId` is a foreign key (reference column) to `empId` from the `Employee` table.
+Each row of this table contains the id of an employee and their respective bonus.
+
+---
+
+Write a solution to report the name and bonus amount of each employee who satisfies either of the following:
+- The employee has a bonus less than `1000`.
+- The employee did not get any bonus.
+
+Return the result table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Employee` table:
+
+| empId | name   | supervisor | salary |
+|-------|--------|------------|--------|
+| 3     | Brad   | null       | 4000   |
+| 1     | John   | 3          | 1000   |
+| 2     | Dan    | 3          | 2000   |
+| 4     | Thomas | 3          | 4000   |
+
+`Bonus` table:
+
+| empId | bonus |
+|-------|-------|
+| 2     | 500   |
+| 4     | 2000  |
+
+**Output:**
+
+| name | bonus |
+|------|-------|
+| Brad | null  |
+| John | null  |
+| Dan  | 500   |
+
+### Solution
+```sql
+select e.name, b.bonus
+from employee e left join bonus b on
+e.empId = b.empId
+where bonus < 1000 or bonus IS NULL
+```
+
+
+# 185. Department Top Three Salaries
+## Table: `Employee`
+
+| Column Name  | Type    |
+|--------------|---------|
+| id           | int     |
+| name         | varchar |
+| salary       | int     |
+| departmentId | int     |
+
+`id` is the primary key (column with unique values) for this table.
+`departmentId` is a foreign key (reference column) of the ID from the `Department` table.
+Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+
+---
+
+## Table: `Department`
+
+| Column Name | Type    |
+|-------------|---------|
+| id          | int     |
+| name        | varchar |
+
+`id` is the primary key (column with unique values) for this table.
+Each row of this table indicates the ID of a department and its name.
+
+---
+
+A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
+
+Write a solution to find the employees who are high earners in each of the departments.
+
+Return the result table in any order. The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Employee` table:
+
+| id | name  | salary | departmentId |
+|----|-------|--------|--------------|
+| 1  | Joe   | 85000  | 1            |
+| 2  | Henry | 80000  | 2            |
+| 3  | Sam   | 60000  | 2            |
+| 4  | Max   | 90000  | 1            |
+| 5  | Janet | 69000  | 1            |
+| 6  | Randy | 85000  | 1            |
+| 7  | Will  | 70000  | 1            |
+
+`Department` table:
+
+| id | name  |
+|----|-------|
+| 1  | IT    |
+| 2  | Sales |
+
+**Output:**
+
+| Department | Employee | Salary |
+|------------|----------|--------|
+| IT         | Max      | 90000  |
+| IT         | Joe      | 85000  |
+| IT         | Randy    | 85000  |
+| IT         | Will     | 70000  |
+| Sales      | Henry    | 80000  |
+| Sales      | Sam      | 60000  |
+
+**Explanation:**
+
+In the IT department:
+- Max earns the highest unique salary
+- Both Randy and Joe earn the second-highest unique salary
+- Will earns the third-highest unique salary
+
+In the Sales department:
+- Henry earns the highest salary
+- Sam earns the second-highest salary
+- There is no third-highest salary as there are only two employees
+
+---
+
+**Constraints:**
+- There are no employees with the exact same name, salary, and department.
+
+### Solution
+```sql
+SELECT name AS Employee, salary AS Salary, Department
+FROM (
+    SELECT e.name, e.salary,
+           d.name AS Department,
+           DENSE_RANK() OVER (PARTITION BY d.id ORDER BY e.salary DESC) AS rnk
+    FROM employee e JOIN department d ON e.departmentId = d.id
+) AS ranked
+WHERE rnk <= 3
+ORDER BY Department, salary DESC;
+```
+
+
+# 176. Second Highest Salary
+## Table: `Employee`
+
+| Column Name | Type |
+|-------------|------|
+| id          | int  |
+| salary      | int  |
+
+`id` is the primary key (column with unique values) for this table.
+Each row of this table contains information about the salary of an employee.
+
+---
+
+Write a solution to find the second highest distinct salary from the `Employee` table. If there is no second highest salary, return `null` (return `None` in Pandas).
+
+The result format is in the following example.
+
+---
+
+### Example 1
+
+**Input:**
+
+`Employee` table:
+
+| id | salary |
+|----|--------|
+| 1  | 100    |
+| 2  | 200    |
+| 3  | 300    |
+
+**Output:**
+
+| SecondHighestSalary |
+|---------------------|
+| 200                 |
+
+---
+
+### Example 2
+
+**Input:**
+
+`Employee` table:
+
+| id | salary |
+|----|--------|
+| 1  | 100    |
+
+**Output:**
+
+| SecondHighestSalary |
+|---------------------|
+| null                |
+
+### Solution
+```sql
+SELECT(
+SELECT salary
+FROM (
+    SELECT salary,id,
+    DENSE_RANK() OVER (ORDER BY salary DESC) as rnk
+    FROM employee
+    ) as ranked
+WHERE rnk = 2 
+LIMIT 1 #only get 1 value if there is a tie
+)  AS SecondHighestSalary #to get a null value
 ```
